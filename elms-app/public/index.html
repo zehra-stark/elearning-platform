@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+<head>
+  <title>WhizCloud – E-Learning LMS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #111;
+      color: #fff;
+    }
+
+    header {
+      background: linear-gradient(135deg, #000, #ff7a18);
+      padding: 14px 30px;
+      display: flex;
+      align-items: center;
+    }
+
+    .platform-title {
+      text-align: center;
+      color: #ff7a18;
+      margin-top: 18px;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    header img {
+      height: 40px;
+    }
+
+    h2 {
+      color: #ff7a18;
+      text-align: center;
+    }
+
+    .box {
+      background: #1c1c1c;
+      width: 420px;
+      margin: 40px auto;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(255, 122, 24, 0.3);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #111;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ff7a18;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .link {
+      text-align: center;
+      margin-top: 10px;
+      color: #ff9f43;
+      cursor: pointer;
+    }
+
+    .msg {
+      text-align: center;
+      margin-top: 10px;
+      min-height: 18px;
+    }
+
+    /* COURSES */
+    .courses {
+      display: none;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .course {
+      background: #1b1b1b;
+      padding: 22px;
+      border-radius: 8px;
+      border-left: 4px solid #ff7a18;
+    }
+
+    .course h3 a {
+      color: #ff9f43;
+      text-decoration: none;
+    }
+
+    .course h3 a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <img
+      src="https://www.whizlabs.com/_next/static/media/Logo_white.d28d6818.svg"
+      alt="WhizCloud Logo"
+    />
+  </header>
+
+  <h1 class="platform-title">Whiz Cloud E-Learning platform</h1>
+
+  <!-- LOGIN -->
+  <div class="box" id="loginBox">
+    <h2>User Login</h2>
+    <input id="loginEmail" type="email" placeholder="Email" />
+    <input id="loginPassword" type="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+
+    <div id="loginMsg" class="msg"></div>
+    <div class="link" onclick="showSignup()">New user? Sign up</div>
+  </div>
+
+  <!-- SIGNUP -->
+  <div class="box" id="signupBox" style="display: none;">
+    <h2>User Signup</h2>
+    <input id="signupUsername" type="text" placeholder="Username" />
+    <input id="signupEmail" type="email" placeholder="Email" />
+    <input id="signupPassword" type="password" placeholder="Password" />
+    <button onclick="register()">Sign Up</button>
+
+    <div id="signupMsg" class="msg"></div>
+    <div class="link" onclick="showLogin()">Already have an account? Login</div>
+  </div>
+
+  <!-- COURSES -->
+  <div class="courses" id="courseSection">
+    <div class="course">
+      <h3>
+        <a
+          href="https://www.whizlabs.com/aws-certified-cloud-practitioner/"
+          target="_blank"
+        >
+          AWS Cloud Practitioner
+        </a>
+      </h3>
+      <p>AWS core services, billing, and cloud concepts.</p>
+    </div>
+
+    <div class="course">
+      <h3>
+        <a
+          href="https://www.whizlabs.com/microsoft-azure-certification-az-104/"
+          target="_blank"
+        >
+          Azure Administrator (AZ-104)
+        </a>
+      </h3>
+      <p>Azure compute, networking, storage, and IAM.</p>
+    </div>
+
+    <div class="course">
+      <h3>
+        <a
+          href="https://www.whizlabs.com/google-cloud-certified-associate-cloud-engineer/"
+          target="_blank"
+        >
+          Google Cloud Engineer
+        </a>
+      </h3>
+      <p>GCP services, IAM, and deployments.</p>
+    </div>
+
+    <div class="course">
+      <h3>
+        <a
+          href="https://www.whizlabs.com/devops-certifications/"
+          target="_blank"
+        >
+          DevOps Certifications
+        </a>
+      </h3>
+      <p>CI/CD, Docker, Kubernetes, automation.</p>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("courseSection").style.display = "none";
+    });
+
+    function showSignup() {
+      loginBox.style.display = "none";
+      signupBox.style.display = "block";
+    }
+
+    function showLogin() {
+      signupBox.style.display = "none";
+      loginBox.style.display = "block";
+    }
+
+    function showCourses() {
+      loginBox.style.display = "none";
+      signupBox.style.display = "none";
+      document.getElementById("courseSection").style.display = "grid";
+    }
+
+    async function register() {
+      const msg = document.getElementById("signupMsg");
+      msg.textContent = "Registering...";
+
+      const res = await fetch("/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: signupUsername.value,
+          email: signupEmail.value,
+          password: signupPassword.value
+        })
+      });
+
+      if (res.ok) {
+        msg.textContent = "Signup successful";
+        setTimeout(showCourses, 700);
+      } else {
+        msg.textContent = "Signup failed";
+      }
+    }
+
+    async function login() {
+      const msg = document.getElementById("loginMsg");
+      msg.textContent = "Checking...";
+
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: loginEmail.value,
+          password: loginPassword.value
+        })
+      });
+
+      if (res.ok) {
+        msg.textContent = "Login successful";
+        setTimeout(showCourses, 700);
+      } else {
+        msg.textContent = "Invalid credentials";
+      }
+    }
+  </script>
+</body>
+</html>
+
